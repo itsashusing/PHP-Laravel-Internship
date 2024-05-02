@@ -1,42 +1,28 @@
-@extends('layout')
-@section('title')
-@endsection
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
     <div class="container">
-        <table class="table table-bordered ">
-            <thead>
-                <tr>
-                    <th>S.No</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Discription</th>
-                    <th colspan="3" class="text-center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($products as $key => $item)
-                    <tr>
-                        <th>{{ $key + 1 }}</th>
-                        <th>{{ $item->id }} </th>
-                        <td>{{ $item->name }} </td>
-                        <td>{{ $item->discriptions }} </td>
-                        <td><a class="btn btn-outline-primary btn-sm" href="{{ route('product.show', $item->id) }}">View</a>
-                        </td>
-                        <td><a class="btn btn-outline-warning btn-sm" href="{{ route('product.edit', $item->id) }}">Update</a>
-                        </td>
-                        <td>
-                            <form action="{{ route('product.destroy', $item->id) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-center">
-            <a class="btn btn-outline-primary" href="{{route('product.create')}}">Add More</a>
+        <div class="center">
+            <div class="innerdiv">
+                <h1>User Data:</h1>
+                <form action="{{ route('importuser') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="file">
+                    <button type="submit">Import</button>
+                </form>
+                <a href="{{ route('exportuser') }}">Export</a>
+            </div>
         </div>
     </div>
-@endsection
+</body>
+
+</html>

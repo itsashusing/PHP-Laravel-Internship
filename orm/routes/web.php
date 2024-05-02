@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/', function () {
-    return redirect()->route('product.index');
+    return view('welcome');
 });
-Route::resource('/product', ProductsController::class);
+
+Route::get('/exportuser',[UserController::class, 'exportuser'])->name('exportuser');
+Route::post('/importuser',[UserController::class,'importuser'])->name('importuser');

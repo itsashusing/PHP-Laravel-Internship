@@ -15,6 +15,12 @@ class UserCart extends Model
 
         return $this->belongsTo(Product::class, 'productid');
     }
+    public function user()
+    {
+
+        return $this->belongsTo(User::class, 'userid');
+    }
+   
 
     public static function subtotal($id)
     {

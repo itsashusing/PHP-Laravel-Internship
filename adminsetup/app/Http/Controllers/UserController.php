@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Checkout;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\User;
@@ -78,10 +79,11 @@ class UserController extends Controller
                 $user = User::find($id);
                 $country = Country::all();
                 $cartitems = UserCart::with('usercart')->where('userid', $id)->get();
-                // return $cartitems;
+                $checkoutorders = Checkout::with('product')-> where('userid', $id)->get();
+                // return $checkoutorders;
                 $useraddress = UserAddress::with('usercountry', 'userstate', 'userdistrict')->get();
                 // return $useraddress;
-                return view('user.profile', compact('user', 'country', 'useraddress', 'cartitems'));
+                return view('user.profile', compact('user', 'country', 'useraddress', 'cartitems', 'checkoutorders'));
             }
         } else {
             return redirect()->route('userlogin')->with('danger', 'First Login to access this page.');
@@ -103,8 +105,6 @@ class UserController extends Controller
         $product = Product::with('category', 'sub_category', 'productimages')->where('id', $id)->get();
         $recentproduct = Product::orderBy('id', 'desc')->take(5)->get();
         $cart = UserCart::all();
-        // return $recentproduct;
-        // return $product;
         return view('user.getproduct', compact('product', 'recentproduct', 'cart'));
     }
 
@@ -130,10 +130,6 @@ class UserController extends Controller
                 $useraddress->district = $request->userdistict;
                 $useraddress->save();
                 return back()->with('success', 'Address updated successfully');
-            } else {
-                return 'Else block';
-                // $deluseraddress->delete();
-                // return back()->with('success', 'Address deleted successfully');
             }
         } else {
             return redirect()->route('userlogin')->with('danger', 'First Login to access this page.');
@@ -152,4 +148,19 @@ class UserController extends Controller
             return redirect()->route('userlogin')->with('danger', 'First Login to access this page.');
         }
     }
+    public function userdetails(Request $request, $id)
+    {
+        if ($request->session()->has('userid')) {
+            if ($id) {
+                $user = User::find($id);
+                $cartitems = UserCart::with('usercart')->where('userid', $id)->get();
+
+                // return $cartitems;
+                return view('userdetails', compact('user', 'cartitems'));
+            }
+        } else {
+            return redirect()->route('userlogin')->with('danger', 'First Login to access this page.');
+        }
+    }
+
 }

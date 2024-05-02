@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Area;
+use App\Models\Category;
+use App\Models\Checkout;
 use App\Models\Country;
 use App\Models\District;
+use App\Models\Product;
+use App\Models\SbCategory;
 use App\Models\State;
 use App\Models\User;
 use App\Models\Slider;
-
+use App\Models\UserCart;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -337,7 +341,7 @@ class AdminController extends Controller
                     'title' => 'required',
                     'discription' => 'required',
                 ]);
-         
+
                 if ($request->hasFile('image')) {
                     $imageName = 'sliderimages/' . time() . '_' . $request->image->getClientOriginalName();
                     $request->image->move('sliderimages/', $imageName);
@@ -346,7 +350,7 @@ class AdminController extends Controller
                     $slider->discription = $request->discription;
                     $slider->image = $imageName;
                     $slider->save();
-                    return back()->withSuccess("Slider image added successfully."); 
+                    return back()->withSuccess("Slider image added successfully.");
 
                 }
             }
@@ -355,5 +359,30 @@ class AdminController extends Controller
             return view('admin.dashboard')->with('success', 'Login first.');
     }
 
+    public function admindashboard(Request $request)
+    {
+        if ($request->session()->has('adminname')) {
+            $usercount = User::count();
+            $activeusercount = User::all()->where('status', 1)->count();
+            $productcount = Product::count();
+            $cartitems = UserCart::count();
+            $categorycount = Category::count();
+            $subcategorycount = SbCategory::count();
 
+            $sale = 0;
+            $pending = 0;
+            $checkouts = Checkout::all();
+
+            foreach ($checkouts as $checkout) {
+                $sale += $checkout->totalprice;
+            }
+
+
+            return view('admin_dashboard', compact('usercount', 'activeusercount', 'cartitems', 'productcount', 'categorycount', 'subcategorycount', 'sale'));
+        } else {
+
+            return view('admin.dashboard');
+        }
+
+    }
 }

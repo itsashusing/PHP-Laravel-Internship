@@ -6,6 +6,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserCartController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -69,6 +71,7 @@ Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::any('/addproducts/{id?}', [ProductController::class, 'addproducts'])->name('addproducts');
 // Slider
 Route::any('/slider', [AdminController::class, 'slider'])->name('slider');
+Route::any('/admindashboard', [AdminController::class, 'admindashboard'])->name('admindashboard');
 
 // User Side
 Route::get('', [UserController::class, 'index'])->name('index');
@@ -77,6 +80,7 @@ Route::any('/userlogout', [UserController::class, 'userlogout'])->name('userlogo
 Route::any('/profiles', [UserController::class, 'userprofile'])->name('userprofile');
 Route::any('/product/{id}', [UserController::class, 'product'])->name('product');
 Route::any('/updateaddress/{id?}', [UserController::class, 'updateaddress'])->name('updateaddress');
+Route::any('/userdetails/{id?}', [UserController::class, 'userdetails'])->name('userdetails');
 // User Cart Increment Decrement
 Route::get('/increment/{id}', [UserCartController::class, 'incrementcartitem'])->name('incrementcartitem');
 Route::get('/decrement/{id}', [UserCartController::class, 'decrement'])->name('decrement');
@@ -84,9 +88,19 @@ Route::get('/decrement/{id}', [UserCartController::class, 'decrement'])->name('d
 // cart route
 Route::any('/addtocartitem/{id}', [UserCartController::class, 'addtocartitem'])->name('addtocartitem');
 Route::any('/removecartitem/{id}', [UserCartController::class, 'removecartitem'])->name('removecartitem');
+Route::get('/checkout', [UserCartController::class, 'checkout'])->name('checkout');
 
 // User Address
 Route::any('/deleteuseraddress/{id?}', [UserController::class, 'deleteuseraddress'])->name('deleteuseraddress');
+// All Orders 
+Route::any('/allorders', [OrdersController::class, 'allorders'])->name('allorders');
+Route::get('/pendingorders/{id?}', [OrdersController::class, 'pendingorders'])->name('pendingorders');
+Route::get('/rejectorders/{id?}', [OrdersController::class, 'rejectorders'])->name('rejectorders');
+Route::get('/acceptorder/{id?}', [OrdersController::class, 'acceptorder'])->name('acceptorder');
+
+// Send Mail
+Route::get('/sendmail', [MailController::class, 'index'])->name('sendmail');
+
 
 Route::get('/adduser', function () {
     return view('adduser');
